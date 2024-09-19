@@ -1,0 +1,95 @@
+package com.mycompany.addfriend;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.lang.NumberFormatException;
+import java.util.Scanner;
+
+public class AddFriend {
+
+    public static void main(String[] args) {
+        try {
+            
+            String nameNumberString;
+            String name;
+            long number;
+            int index;
+            
+            Scanner entrada = new Scanner(System.in);
+            System.out.println("Enter name:");
+            String newName = entrada.nextLine();
+            System.out.println("Enter number:");
+            long newNumber = entrada.nextLong();
+            
+ 
+            File file = new File("friendsContact.txt");
+ 
+            if (!file.exists()) {
+ 
+                file.createNewFile();
+            }
+ 
+            
+ 
+            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            boolean found = false;
+ 
+            
+            while (raf.getFilePointer() < raf.length()) {
+ 
+                
+                nameNumberString = raf.readLine();
+ 
+                
+                String[] lineSplit = nameNumberString.split("!");
+ 
+                
+                name = lineSplit[0];
+                number = Long.parseLong(lineSplit[1]);
+ 
+
+                if (name == newName || number == newNumber) {
+                    found = true;
+                    break;
+                }
+            }
+ 
+            if (found == false) {
+ 
+                
+                nameNumberString = newName + "!" + String.valueOf(newNumber);
+ 
+               
+                raf.writeBytes(nameNumberString);
+ 
+                
+                raf.writeBytes(System.lineSeparator());
+ 
+                
+                System.out.println(" Friend added. ");
+ 
+                
+                raf.close();
+            }
+            
+            else {
+ 
+                // Closing the resources.
+                raf.close();
+ 
+                // Print the message
+                System.out.println(" Input name" + " does not exists. ");
+            }
+        }
+ 
+        catch (IOException ioe) {
+ 
+            System.out.println(ioe);
+        }
+        catch (NumberFormatException nef) {
+ 
+            System.out.println(nef);
+        }
+    }
+}
